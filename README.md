@@ -1,107 +1,33 @@
-# Actividad Base: Flask + DataXY
+# Desarrollo de Software para Hardware (DCSH01)
+## Evaluación Sumativa 4.2: Visualización Personalizada de Datos XY
 
-Este repositorio es un ejemplo inicial para practicar con **Flask** y **GitHub**.
-La intensión es que los estudiantes lo usen como punto de partida, lo modifiquen y luego lo suban a su propio repositorio.
-
----
-
-## Objetivo
-
-* Clonar el repositorio y trabajar en una copia personal
-* Ejecutar Flask y recibir datos **x, y** desde una aplicación móvil
-* Visualizar datos en una página HTML sencilla
-* Subir cambios a GitHub
+Este repositorio contiene una versión modificada y optimizada del proyecto base para la adquisición y visualización de datos de telemetría provenientes de un sensor móvil (acelerómetro). La interfaz ha sido rediseñada completamente desde cero utilizando un enfoque creativo de radar interactivo en un entorno web dinámico.
 
 ---
 
-## Requisitos
+## Características Incorporadas
 
-* Entorno para Python y Flask instalados
-* Cuenta en GitHub
-* Aplicación móvil (APK) para enviar datos
-
----
-
-## Descarga de Aplicación APK
-
-Se puede descargar la aplicación móvil desde aquí:
-
-[Descargar XYaTCPfull.apk](./XYaTCPfull.apk)
+* **Tema Oscuro Moderno:** Diseño con paleta de colores oscuros profundos y acentos en azul neón vibrante.
+* **Visualización Creativa en Tiempo Real:** En lugar de una cuadrícula estática rígida, se implementó un Visor de Radar de Tipo Mira, el cual traduce de forma fluida y continua las coordenadas analógicas de los ejes X e Y en la pantalla mediante un indicador luminoso móvil.
+* **Comportamiento de Palanca de Mando (Yoke):** El sistema mapea de manera interactiva la inclinación física del dispositivo móvil, simulando la interfaz de control de una aeronave.
 
 ---
 
-## Pasos básicos
+## Restricciones Obligatorias Cumplidas
 
-### 1. Clonar el repositorio
-
-```bash
-git clone https://github.com/jotaefepece/Actividad-dataXY-base
-cd Actividad-dataXY-base
-```
-
-### 2. Instalar y ejecutar la aplicación apk
-
-```bash
-### La red del celular tiene que estar en la misma red local ###
-```
-
-### 3. Ejecutar Flask
-
-```bash
-python3 app.py
-```
-
-### 4. Probar en el navegador
-
-```
-http://127.0.0.1:5000
-```
+De acuerdo con los requerimientos de la evaluación, la interfaz cumple estrictamente con las siguientes reglas de diseño:
+1. Sin JavaScript: Todo el dinamismo de la interfaz y el posicionamiento en tiempo real se resuelven exclusivamente mediante lógica de servidor y condicionales inline.
+2. Uso Exclusivo de Flask, HTML, CSS y Jinja: Las posiciones relativas se calculan dinámicamente en el backend y se renderizan usando el motor de plantillas Jinja.
+3. CSS en el <head>: Todo el código de diseño de la interfaz se encuentra incorporado internamente dentro de las etiquetas <style> del bloque <head>.
+4. Uso Exclusivo de Selectores por ID: No se empleó ninguna clase CSS (.class); todos los elementos y estilos apuntan estrictamente a selectores únicos por identificador (#id).
 
 ---
 
-## Estructura del ejercicio
+## Estructura del Proyecto
 
 ```bash
 .
-├── app.py
-├── capturas
-│   ├── archivos-base.png
-│   └── vista-base.png
-├── README.md
-├── templates
-│   └── index.html
-└── XYaTCPfull.apk
-```
-
----
-
-## Capturas
-
-### Estructura de archivos
-
-![Estructura de los archivos](capturas/archivos-base.png)
-
----
-
-### Vista en el navegador
-
-![Vista HTML](capturas/vista-base.png)
-
----
-
-## Inicio del ejercicio
-
-Cada estudiante debe:
-
-* Crear una pestaña en Flask que muestre un dato recibido
-* Modificar el HTML para encender una celda en un rectángulo **2x2** según los valores **x, y**
-* Subir su versión modificada a su propio repositorio
-
----
-
-## Notas
-
-* Este README es solo una guía básica.
-* El trabajo final depende de cada estudiante y de cómo adapte el ejercicio.
-
----
+├── app.py               # Servidor Flask que recibe la telemetría TCP del sensor (Ejes Y, X)
+├── README.md            # Documentación del proyecto modificado
+└── templates
+    └── index.html       # Plantilla HTML con estilos por ID y lógica de posicionamiento Jinja

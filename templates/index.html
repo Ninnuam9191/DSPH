@@ -1,65 +1,86 @@
 <!DOCTYPE html>
-<html>
-
+<html id="html-root">
 <head>
- <meta http-equiv="refresh" content="2"></meta>
-<style>
-	#tabla{border-collapse:collapse;
-		}
-	#q1,#q2,#q3,#q4{	/*Varios id con mismas características*/
-		width:100px;
-		height:100px;
-		border:1px solid black;
-		text-align:center;
-		}
-	#q1{background-color:	/*Cuadrante 1*/
-		{% if ejeX > 0 and ejeY > 0 %}
-			lightblue;
-		{% else %}
-			gray;
-		{% endif %}
-		}
-	#q2{background-color:	/*Cuadrante 2*/
-		{% if ejeX > 0 and ejeY < 0 %}
-			lightblue;
-		{% else %}
-			gray;
-		{% endif %}
-		}
-	#q3{background-color:	/*Cuadrante 3*/
-		{% if ejeX < 0 and ejeY > 0 %}
-			lightblue;
-		{% else %}
-			gray;
-		{% endif %}
-		}
-	#q4{background-color:	/*Cuadrante 4*/
-		{% if ejeX < 0 and ejeY < 0 %}
-			lightblue;
-		{% else %}
-			gray;
-		{% endif %}
-		}
-</style>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="2"> <title>DCSH01 - Radar XY</title>
+    <style>
+        /* Estilos base del tema oscuro */
+        #html-root, body { background-color: #0b0f19; color: #f3f4f6; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
+        #main-container { background-color: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 20px 25px rgba(0,0,0,0.5); text-align: center; }
+        
+        /* Títulos y textos */
+        #main-title { font-size: 1.8rem; margin: 0; text-transform: uppercase; background: linear-gradient(135deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #sub-title { font-size: 1rem; color: #9ca3af; margin: 5px 0 20px 0; }
+        #explanation-box { background-color: #1f2937; border-left: 4px solid #00f2fe; border-radius: 6px; padding: 12px; margin-bottom: 25px; text-align: left; font-size: 0.85rem; line-height: 1.4; }
+        
+        /* Indicadores numéricos */
+        #telemetry-wrapper { display: flex; justify-content: space-around; margin-bottom: 25px; }
+        #card-x, #card-y { background-color: #1f2937; border: 1px solid #374151; border-radius: 10px; padding: 10px; width: 40%; }
+        #label-x, #label-y { font-size: 0.75rem; color: #9ca3af; margin: 0; text-transform: uppercase; }
+        #val-x, #val-y { font-size: 1.6rem; font-weight: bold; color: #00f2fe; margin: 5px 0 0 0; }
 
+        /* Contenedor del Radar */
+        #radar-screen { 
+            position: relative; 
+            width: 280px; 
+            height: 280px; 
+            background-color: #1e293b; 
+            border: 2px solid #374151; 
+            border-radius: 50%; 
+            margin: 0 auto; 
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        /* Líneas de los ejes X e Y del visor */
+        #axis-x { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background-color: rgba(71, 85, 105, 0.7); }
+        #axis-y { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background-color: rgba(71, 85, 105, 0.7); }
+        
+        /* Círculos concéntricos de referencia */
+        #ring-inner { position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; border: 1px dashed rgba(71, 85, 105, 0.4); border-radius: 50%; }
+
+        /* Punto indicador dinámico */
+        #radar-pointer {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: #00f2fe;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00f2fe, 0 0 30px #00f2fe;
+            transform: translate(-50%, -50%);
+            transition: left 0.4s ease-out, top 0.4s ease-out;
+
+            /* Matemáticas con Jinja: Convierte rango [-10 a 10] a porcentaje [0% a 100%] */
+            left: {{ ((ejeX + 10) / 20) * 100 }}%;
+            
+            /* Inversión del eje Y para que los positivos vayan hacia arriba en la pantalla */
+            top: {{ (1 - ((ejeY + 10) / 20)) * 100 }}%;
+        }
+    </style>
 </head>
 <body>
 
-<h1>Posición XY</h1>
+<div id="main-container">
+    <h1 id="main-title">Radar de Movimiento</h1>
+    <h2 id="sub-title">Desarrollo de Software para Hardware (Evaluación 4.2)</h2>
+    
+    <div id="explanation-box">
+        <strong>Explicación:</strong> Los datos se visualizan creativamente mediante un sistema de mira de radar. El punto brillante central se desplaza de manera fluida mapeando las coordenadas continuas X e Y directamente en un plano de dos dimensiones, se debe utilizar el teléfono en modo horizontal.
+    </div>
 
-<p>X = {{ ejeX }}</p>
-<p>Y = {{ ejeY }}</p>
+    <div id="telemetry-wrapper">
+        <div id="card-x"><p id="label-x">Eje X</p><p id="val-x">{{ ejeX }}</p></div>
+        <div id="card-y"><p id="label-y">Eje Y</p><p id="val-y">{{ ejeY }}</p></div>
+    </div>
 
-<table id="tabla">
-<tr id="cuadros">
-    <td id="q1">Q1</td>
-    <td id="q2">Q2</td>
-</tr>
-<tr>
-    <td id="q3">Q3</td>
-    <td id="q4">Q4</td>
-</tr>
-</table>
+    <div id="radar-screen">
+        <div id="axis-x"></div>
+        <div id="axis-y"></div>
+        <div id="ring-inner"></div>
+        <div id="radar-pointer"></div>
+    </div>
+</div>
 
 </body>
 </html>

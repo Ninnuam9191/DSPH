@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 import socket
+
 app = Flask(__name__)
-HOST = "172.20.10.2"	## Ip del servidor
+HOST = "192.168.1.167"	## Ip del servidor
 PORT = 12345			## Puerto del servidor
 
 def leer_sensor():
@@ -21,12 +22,12 @@ def leer_sensor():
 
 @app.route('/')
 def index():
-    ejeY, ejeX = leer_sensor() #órden ejes.
+    ejeY, ejeX = leer_sensor() # orden ejes
     return render_template(
         'index.html',
         ejeX=ejeX,
         ejeY=ejeY
     )
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
- 
