@@ -1,15 +1,19 @@
 # Desarrollo de Software para Hardware (DCSH01)
 ## Evaluación Sumativa 4.2: Visualización Personalizada de Datos XY
 
-Este repositorio contiene una versión modificada y optimizada del proyecto base para la adquisición y visualización de datos de telemetría provenientes de un sensor móvil (acelerómetro). La interfaz ha sido rediseñada completamente desde cero utilizando un enfoque creativo de radar interactivo en un entorno web dinámico.
+Este repositorio contiene una versión modificada y optimizada del proyecto base para la adquisición y visualización de datos de telemetría provenientes de un sensor móvil (acelerómetro). La interfaz ha sido rediseñada utilizando un enfoque creativo de radar interactivo.
 
 ---
 
 ## Características Incorporadas
 
 * **Tema Oscuro Moderno:** Diseño con paleta de colores oscuros profundos y acentos en azul neón vibrante.
-* **Visualización Creativa en Tiempo Real:** En lugar de una cuadrícula estática rígida, se implementó un Visor de Radar de Tipo Mira, el cual traduce de forma fluida y continua las coordenadas analógicas de los ejes X e Y en la pantalla mediante un indicador luminoso móvil.
-* **Comportamiento de Palanca de Mando (Yoke):** El sistema mapea de manera interactiva la inclinación física del dispositivo móvil, simulando la interfaz de control de una aeronave.
+* **Visualización Creativa en Tiempo Real:** En lugar de una cuadrícula estática rígida, se implementó un Visor de Radar de tipo mira, el cual traduce de forma continua las coordenadas analógicas de los ejes X e Y en la pantalla mediante un indicador luminoso.
+* **Comportamiento de Palanca de Mando (Yoke):** El sistema mapea de manera interactiva la inclinación física del dispositivo móvil, simulando la interfaz de control de una aeronave. 
+
+### Interfaz del Radar en Funcionamiento
+
+![Vista del Radar Funcionando](capturas/vista-radar.png)
 
 ---
 
@@ -28,6 +32,8 @@ De acuerdo con los requerimientos de la evaluación, la interfaz cumple estricta
 ```bash
 .
 ├── app.py               # Servidor Flask que recibe la telemetría TCP del sensor (Ejes Y, X)
+├── capturas
+│   └── vista-radar.png  # Captura de pantalla de la interfaz en funcionamiento
 ├── README.md            # Documentación del proyecto modificado
 └── templates
     └── index.html       # Plantilla HTML con estilos por ID y lógica de posicionamiento Jinja
