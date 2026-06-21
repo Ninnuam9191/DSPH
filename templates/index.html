@@ -2,71 +2,71 @@
 <html id="html-root">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="2"> <title>DCSH01 - Radar XY</title>
+    <meta http-equiv="refresh" content="2; url=?view={{ current_view }}">
+    <title>DCSH01 - Panel de Telemetría</title>
     <style>
         /* Estilos base del tema oscuro */
         #html-root, body { background-color: #0b0f19; color: #f3f4f6; font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; }
         #main-container { background-color: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 30px; width: 90%; max-width: 450px; box-shadow: 0 20px 25px rgba(0,0,0,0.5); text-align: center; }
         
-        /* Títulos y textos */
         #main-title { font-size: 1.8rem; margin: 0; text-transform: uppercase; background: linear-gradient(135deg, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         #sub-title { font-size: 1rem; color: #9ca3af; margin: 5px 0 20px 0; }
-        #explanation-box { background-color: #1f2937; border-left: 4px solid #00f2fe; border-radius: 6px; padding: 12px; margin-bottom: 25px; text-align: left; font-size: 0.85rem; line-height: 1.4; }
         
+        /* Menú de Navegación */
+        #nav-menu { display: flex; justify-content: space-between; margin-bottom: 20px; background-color: #1f2937; padding: 5px; border-radius: 8px; border: 1px solid #374151; }
+        #link-radar, #link-arrows, #link-graph { flex: 1; padding: 8px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border-radius: 6px; text-transform: uppercase; color: #9ca3af; }
+        #link-radar-active, #link-arrows-active, #link-graph-active { flex: 1; padding: 8px; text-decoration: none; font-size: 0.85rem; font-weight: bold; border-radius: 6px; text-transform: uppercase; color: #ffffff; background-color: #374151; border: 1px solid #00f2fe; }
+
         /* Indicadores numéricos */
         #telemetry-wrapper { display: flex; justify-content: space-around; margin-bottom: 25px; }
         #card-x, #card-y { background-color: #1f2937; border: 1px solid #374151; border-radius: 10px; padding: 10px; width: 40%; }
         #label-x, #label-y { font-size: 0.75rem; color: #9ca3af; margin: 0; text-transform: uppercase; }
         #val-x, #val-y { font-size: 1.6rem; font-weight: bold; color: #00f2fe; margin: 5px 0 0 0; }
 
-        /* Contenedor del Radar */
-        #radar-screen { 
-            position: relative; 
-            width: 280px; 
-            height: 280px; 
-            background-color: #1e293b; 
-            border: 2px solid #374151; 
-            border-radius: 50%; 
-            margin: 0 auto; 
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
-        }
-
-        /* Líneas de los ejes X e Y del visor */
+        /* --- VISUALIZACIÓN 1: RADAR --- */
+        #radar-screen { position: relative; width: 280px; height: 280px; background-color: #1e293b; border: 2px solid #374151; border-radius: 50%; margin: 0 auto; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.6); }
         #axis-x { position: absolute; top: 50%; left: 0; width: 100%; height: 1px; background-color: rgba(71, 85, 105, 0.7); }
         #axis-y { position: absolute; left: 50%; top: 0; width: 1px; height: 100%; background-color: rgba(71, 85, 105, 0.7); }
-        
-        /* Círculos concéntricos de referencia */
         #ring-inner { position: absolute; top: 25%; left: 25%; width: 50%; height: 50%; border: 1px dashed rgba(71, 85, 105, 0.4); border-radius: 50%; }
-
-        /* Punto indicador dinámico */
         #radar-pointer {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background-color: #00f2fe;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            box-shadow: 0 0 15px #00f2fe, 0 0 30px #00f2fe;
-            transform: translate(-50%, -50%);
-            transition: left 0.4s ease-out, top 0.4s ease-out;
-
-            /* Matemáticas con Jinja: Convierte rango [-10 a 10] a porcentaje [0% a 100%] */
+            position: absolute; width: 16px; height: 16px; background-color: #00f2fe; border: 2px solid #ffffff; border-radius: 50%; box-shadow: 0 0 15px #00f2fe; transform: translate(-50%, -50%);
             left: {{ ((ejeX + 10) / 20) * 100 }}%;
-            
-            /* Inversión del eje Y para que los positivos vayan hacia arriba en la pantalla */
             top: {{ (1 - ((ejeY + 10) / 20)) * 100 }}%;
         }
+
+        /* --- VISUALIZACIÓN 2: INSTRUMENTO DE HORIZONTE ARTIFICIAL (AVIÓN CLÁSICO) --- */
+        #horizon-indicator { position: relative; width: 280px; height: 280px; background-color: #1e293b; border: 4px solid #4b5563; border-radius: 50%; margin: 0 auto; overflow: hidden; box-shadow: inset 0 0 25px rgba(0,0,0,0.8); }
+        
+        /* La barra del horizonte se mueve hacia arriba/abajo (ejeY) y rota de lado (ejeX) */
+        #horizon-line { 
+            position: absolute; width: 200%; height: 4px; background-color: #00f2fe; top: 50%; left: -50%; box-shadow: 0 0 12px #00f2fe;
+            transform: translateY({{ (ejeY / 10) * -100 }}px) rotate({{ -ejeX * 4 }}deg);
+            transition: transform 0.2s ease-out;
+        }
+        
+        /* Silueta clásica estática de avión en el centro */
+        #plane-silhouette-left { position: absolute; top: 50%; left: 20%; width: 50px; height: 6px; background-color: #ef4444; transform: translateY(-50%); border-radius: 3px; box-shadow: 0 0 8px #ef4444; }
+        #plane-silhouette-right { position: absolute; top: 50%; right: 20%; width: 50px; height: 6px; background-color: #ef4444; transform: translateY(-50%); border-radius: 3px; box-shadow: 0 0 8px #ef4444; }
+        #plane-silhouette-center { position: absolute; top: 50%; left: 50%; width: 12px; height: 12px; background-color: #ef4444; transform: translate(-50%, -50%); border-radius: 50%; box-shadow: 0 0 8px #ef4444; }
+
+        /* --- VISUALIZACIÓN 3: GRÁFICO DE BARRAS DE EJE --- */
+        #graph-container { background-color: #1f2937; border: 1px solid #374151; border-radius: 12px; padding: 20px; text-align: left; }
+        #bar-title-x, #bar-title-y { font-size: 0.8rem; color: #9ca3af; margin: 0 0 5px 0; text-transform: uppercase; }
+        #bar-bg-x, #bar-bg-y { background-color: #111827; border-radius: 6px; height: 25px; width: 100%; margin-bottom: 15px; overflow: hidden; position: relative; border: 1px solid #374151; }
+        #bar-fill-x { height: 100%; background: linear-gradient(90deg, #4facfe, #00f2fe); box-shadow: 0 0 10px #00f2fe; width: {{ ((ejeX + 10) / 20) * 100 }}%; }
+        #bar-fill-y { height: 100%; background: linear-gradient(90deg, #f43f5e, #ec4899); box-shadow: 0 0 10px #f43f5e; width: {{ ((ejeY + 10) / 20) * 100 }}%; }
     </style>
 </head>
 <body>
 
 <div id="main-container">
-    <h1 id="main-title">Radar de Movimiento</h1>
-    <h2 id="sub-title">Desarrollo de Software para Hardware (Evaluación 4.2)</h2>
+    <h1 id="main-title">Panel de Hardware</h1>
+    <h2 id="sub-title">Múltiples Vistas de Datos XY</h2>
     
-    <div id="explanation-box">
-        <strong>Explicación:</strong> Los datos se visualizan creativamente mediante un sistema de mira de radar. El punto brillante central se desplaza de manera fluida mapeando las coordenadas continuas X e Y directamente en un plano de dos dimensiones, se debe utilizar el teléfono en modo horizontal.
+    <div id="nav-menu">
+        <a href="?view=radar" id="{% if current_view == 'radar' %}link-radar-active{% else %}link-radar{% endif %}">Radar</a>
+        <a href="?view=arrows" id="{% if current_view == 'arrows' %}link-arrows-active{% else %}link-arrows{% endif %}">Avión</a>
+        <a href="?view=graph" id="{% if current_view == 'graph' %}link-graph-active{% else %}link-graph{% endif %}">Gráfico</a>
     </div>
 
     <div id="telemetry-wrapper">
@@ -74,12 +74,33 @@
         <div id="card-y"><p id="label-y">Eje Y</p><p id="val-y">{{ ejeY }}</p></div>
     </div>
 
+    {% if current_view == 'radar' %}
     <div id="radar-screen">
         <div id="axis-x"></div>
         <div id="axis-y"></div>
         <div id="ring-inner"></div>
         <div id="radar-pointer"></div>
     </div>
+
+    {% elif current_view == 'arrows' %}
+    <div id="horizon-indicator">
+        <div id="horizon-line"></div>
+        
+        <div id="plane-silhouette-left"></div>
+        <div id="plane-silhouette-center"></div>
+        <div id="plane-silhouette-right"></div>
+    </div>
+
+    {% elif current_view == 'graph' %}
+    <div id="graph-container">
+        <p id="bar-title-x">Nivel Eje X</p>
+        <div id="bar-bg-x"><div id="bar-fill-x"></div></div>
+        
+        <p id="bar-title-y">Nivel Eje Y</p>
+        <div id="bar-bg-y"><div id="bar-fill-y"></div></div>
+    </div>
+    {% endif %}
+
 </div>
 
 </body>
