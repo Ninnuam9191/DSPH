@@ -7,7 +7,7 @@ Este repositorio contiene una versión modificada y optimizada del proyecto base
 
 ## Características Incorporadas
 
-* **Tema Oscuro Moderno:** Diseño con paleta de colores oscuros profundos y acentos en azul neón y rosa vibrante.
+* **Tema Oscuro Moderno:** Diseño con paleta de colores oscuros profundos y acentos en azul neón y rosado vibrante.
 * **Sistema Multivista Integrado:** Navegación controlada desde el servidor que permite al usuario alternar mediante enlaces (`?view=`) entre tres modos de renderizado interactivo:
   1. **Visor de Radar:** Estilo mira telescópica, que traduce las coordenadas analógicas de los ejes en un indicador luminoso central.
   2. **Instrumento de Avión:** Un horizonte artificial clásico de aviación análoga donde la barra de horizonte rota (Eje X / *Roll*) y se desplaza verticalmente (Eje Y / *Pitch*) de forma dinámica detrás de una silueta fija.
